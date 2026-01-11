@@ -19,19 +19,6 @@ const Footer: React.FC = () => {
     }
   };
 
-  const downloadLogo = () => {
-    const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 200" fill="none"><rect x="94" y="67" width="45" height="6.5" rx="3.25" fill="#10B981" /><rect x="110" y="78" width="35" height="6.5" rx="3.25" fill="#10B981" /><rect x="94" y="89" width="55" height="6.5" rx="3.25" fill="#10B981" /><rect x="105" y="100" width="50" height="6.5" rx="3.25" fill="#10B981" /><rect x="108" y="111" width="45" height="6.5" rx="3.25" fill="#10B981" /><rect x="134" y="122" width="25" height="6.5" rx="3.25" fill="#10B981" /><path d="M168.5 67L215 170H234L281 67H253L224.5 135L196.5 67H168.5Z" fill="#1E1B4B" /><path d="M260 85L295 67H315" stroke="#10B981" stroke-width="6" stroke-linecap="round" /><circle cx="323" cy="67" r="7" fill="#10B981" /><path d="M255 110L285 95H320" stroke="#10B981" stroke-width="6" stroke-linecap="round" /><circle cx="328" cy="95" r="7" fill="#10B981" /><path d="M245 135L290 120H325" stroke="#10B981" stroke-width="6" stroke-linecap="round" /><circle cx="333" cy="120" r="7" fill="#10B981" /><path d="M230 160L275 145H310" stroke="#10B981" stroke-width="6" stroke-linecap="round" /><circle cx="318" cy="145" r="7" fill="#10B981" /></svg>`;
-    const blob = new Blob([svgContent], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'vayuk-solutions-logo.svg';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   const footerLinks = [
     { name: 'About', id: 'about' },
     { name: 'Solutions', id: 'services' },
@@ -77,21 +64,16 @@ const Footer: React.FC = () => {
             ))}
           </div>
 
-          <div className="flex flex-col items-center gap-6">
-            <button 
-              onClick={downloadLogo}
-              className="px-6 py-2 border border-white/10 rounded-full text-[9px] font-bold uppercase tracking-[0.3em] hover:bg-white/5 transition-colors flex items-center gap-2"
-            >
-              <svg className="w-3 h-3 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download Logo (SVG)
-            </button>
-            <div className="h-px w-24 bg-white/10"></div>
-          </div>
+          <div className="h-px w-24 bg-white/10"></div>
 
-          <div className="text-[10px] font-sans text-white/20 uppercase tracking-[0.4em]">
-            © {new Date().getFullYear()} VAYUK SOLUTIONS — AUTOMATING THE FUTURE OF SMEs.
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="text-[10px] font-sans text-white/20 uppercase tracking-[0.4em]">
+              © {new Date().getFullYear()} VAYUK SOLUTIONS — AUTOMATING THE FUTURE OF SMEs.
+            </div>
+            <div className="flex gap-6 text-[9px] font-bold uppercase tracking-widest text-white/30">
+              <a href="#" className="hover:text-brand transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-brand transition-colors">Terms of Service</a>
+            </div>
           </div>
         </div>
       </div>
