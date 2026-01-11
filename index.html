@@ -6,6 +6,9 @@
     <title>Vayuk Solutions | The Efficiency Engine for SMEs</title>
     <meta name="description" content="Vayuk Solutions automates Small and Medium Enterprises with AI-driven software, custom SaaS tools, and 24/7 lead automation.">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vayuk.solutions/">
@@ -23,7 +26,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <script>
-      tailwind.config = {
+      window.tailwind.config = {
         theme: {
           extend: {
             colors: {
@@ -99,5 +102,7 @@
 </head>
 <body class="overflow-x-hidden">
     <div id="root"></div>
+    <!-- Entry point for the application -->
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>
