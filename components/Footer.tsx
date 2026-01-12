@@ -1,22 +1,27 @@
 import React from 'react';
 import { BrandLogo } from './Navbar';
 
-const Footer: React.FC = () => {
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+interface FooterProps {
+  setView: (view: any) => void;
+}
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+const Footer: React.FC<FooterProps> = ({ setView }) => {
+  const handleHomeNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    setView('home');
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        window.scrollTo({
+          top: elementPosition - offset,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   const footerLinks = [
@@ -34,13 +39,12 @@ const Footer: React.FC = () => {
         <div className="flex flex-col items-center gap-12 text-center">
           
           <div className="flex flex-col items-center gap-4">
-            <a 
-              href="#home" 
-              onClick={(e) => handleNavClick(e, 'home')}
+            <button 
+              onClick={() => setView('home')}
               className="transition-transform hover:scale-105 active:scale-95"
             >
               <BrandLogo className="h-20" grayscale />
-            </a>
+            </button>
             <div className="flex flex-col items-center leading-none mt-6">
               <span className="text-3xl font-heading font-bold tracking-tighter text-white uppercase">
                 VAYUK <span className="text-brand">SOLUTIONS</span>
@@ -56,7 +60,7 @@ const Footer: React.FC = () => {
               <a 
                 key={link.id}
                 href={`#${link.id}`} 
-                onClick={(e) => handleNavClick(e, link.id)}
+                onClick={(e) => handleHomeNavClick(e, link.id)}
                 className="hover:text-brand transition-colors"
               >
                 {link.name}
@@ -71,8 +75,8 @@ const Footer: React.FC = () => {
               © {new Date().getFullYear()} VAYUK SOLUTIONS — AUTOMATING THE FUTURE OF SMEs.
             </div>
             <div className="flex gap-6 text-[9px] font-bold uppercase tracking-widest text-white/30">
-              <a href="#" className="hover:text-brand transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-brand transition-colors">Terms of Service</a>
+              <button onClick={() => { setView('privacy'); window.scrollTo(0, 0); }} className="hover:text-brand transition-colors">Privacy Policy</button>
+              <button onClick={() => { setView('terms'); window.scrollTo(0, 0); }} className="hover:text-brand transition-colors">Terms of Service</button>
             </div>
           </div>
         </div>

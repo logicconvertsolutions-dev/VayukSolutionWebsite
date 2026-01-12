@@ -10,37 +10,66 @@ import PainPointAnalyzer from './components/PainPointAnalyzer';
 import Process from './components/Process';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 
 const App: React.FC = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [view, setView] = useState<'home' | 'privacy' | 'terms'>('home');
 
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 800);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    // Listen for navigation events from Footer/Navbar
+    const handleNav = (e: any) => {
+      setView(e.detail);
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener('vayuk-nav', handleNav);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('vayuk-nav', handleNav);
+    };
   }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const renderContent = () => {
+    switch (view) {
+      case 'privacy':
+        return <PrivacyPolicy onBack={() => setView('home')} />;
+      case 'terms':
+        return <TermsOfService onBack={() => setView('home')} />;
+      default:
+        return (
+          <>
+            <Hero />
+            <About />
+            <Services />
+            <AutomationSpotlight />
+            <AIEdge />
+            <ROICalculator />
+            <PainPointAnalyzer />
+            <Process />
+            <Contact />
+          </>
+        );
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans relative">
-      <Navbar />
+      <Navbar currentView={view} setView={setView} />
       <main>
-        <Hero />
-        <About />
-        <Services />
-        <AutomationSpotlight />
-        <AIEdge />
-        <ROICalculator />
-        <PainPointAnalyzer />
-        <Process />
-        <Contact />
+        {renderContent()}
       </main>
-      <Footer />
+      <Footer setView={setView} />
 
       {/* Back to Top Button */}
       <button 

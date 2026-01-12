@@ -31,7 +31,12 @@ export const BrandLogo: React.FC<{ className?: string; grayscale?: boolean }> = 
   </svg>
 );
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  currentView: string;
+  setView: (view: any) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ currentView, setView }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -44,19 +49,29 @@ const Navbar: React.FC = () => {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
+    if (currentView !== 'home') {
+      setView('home');
+      // Wait for re-render before scrolling
+      setTimeout(() => {
+        scrollToElement(id);
+      }, 100);
+    } else {
+      scrollToElement(id);
+    }
+    setIsMobileMenuOpen(false);
+  };
+
+  const scrollToElement = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
       window.scrollTo({
-        top: offsetPosition,
+        top: elementPosition - offset,
         behavior: 'smooth'
       });
-      setIsMobileMenuOpen(false);
     }
   };
 
@@ -69,24 +84,22 @@ const Navbar: React.FC = () => {
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? 'bg-white/95 backdrop-blur-xl border-b border-primary/5 py-3 shadow-md' : 'bg-transparent py-6'
+        isScrolled || currentView !== 'home' ? 'bg-white/95 backdrop-blur-xl border-b border-primary/5 py-3 shadow-md' : 'bg-transparent py-6'
       }`}>
         <div className="container mx-auto px-6 flex justify-between items-center">
-          <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="flex items-center group relative z-[60]">
-            <BrandLogo className={`transition-all duration-500 ${isScrolled ? 'h-10' : 'h-12'}`} />
+          <button onClick={() => setView('home')} className="flex items-center group relative z-[60]">
+            <BrandLogo className={`transition-all duration-500 ${isScrolled || currentView !== 'home' ? 'h-10' : 'h-12'}`} />
             <div className="flex flex-col leading-none ml-1">
               <span className="text-xl md:text-2xl font-heading font-bold tracking-tighter text-accent uppercase">
                 VAYUK <span className="text-brand">SOLUTIONS</span>
               </span>
             </div>
-          </a>
+          </button>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-10 text-[11px] font-sans font-bold uppercase tracking-[0.15em] text-accent/70">
-            {/* About Link */}
             <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-brand transition-colors">About</a>
             
-            {/* Solutions Dropdown */}
             <div 
               className="relative py-2"
               onMouseEnter={() => setShowDropdown(true)}
@@ -118,7 +131,6 @@ const Navbar: React.FC = () => {
               )}
             </div>
             
-            {/* Direct Links */}
             {navLinks.slice(1).map((link) => (
               <a 
                 key={link.id} 
@@ -130,13 +142,11 @@ const Navbar: React.FC = () => {
               </a>
             ))}
             
-            {/* Primary CTA */}
             <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="px-8 py-3.5 bg-brand text-white rounded-full font-bold hover:brightness-105 transition-all shadow-lg shadow-brand/20 active:scale-95 text-[10px] tracking-widest ml-4">
               BOOK AN AUDIT
             </a>
           </div>
 
-          {/* Mobile Toggle */}
           <button 
             className="md:hidden relative z-[60] text-accent p-2 focus:outline-none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -151,35 +161,18 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-[55] md:hidden transition-all duration-500 ${
         isMobileMenuOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none'
       }`}>
-        <div 
-          className={`absolute inset-0 bg-accent/95 backdrop-blur-xl transition-opacity duration-500 ${
-            isMobileMenuOpen ? 'opacity-100' : 'opacity-0'
-          }`}
-          onClick={() => setIsMobileMenuOpen(false)}
-        ></div>
-        
-        <div className={`relative h-full flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out ${
-          isMobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-12 opacity-0'
-        }`}>
+        <div className={`absolute inset-0 bg-accent/95 backdrop-blur-xl transition-opacity duration-500 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className={`relative h-full flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out ${isMobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-12 opacity-0'}`}>
           <div className="space-y-6 text-center">
-            <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="block text-3xl font-heading font-bold text-white hover:text-brand transition-colors">Home</a>
+            <button onClick={() => { setView('home'); setIsMobileMenuOpen(false); }} className="block w-full text-3xl font-heading font-bold text-white hover:text-brand transition-colors">Home</button>
             <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="block text-3xl font-heading font-bold text-white hover:text-brand transition-colors">About</a>
             <a href="#services" onClick={(e) => handleNavClick(e, 'services')} className="block text-3xl font-heading font-bold text-white hover:text-brand transition-colors">Solutions</a>
             <a href="#process" onClick={(e) => handleNavClick(e, 'process')} className="block text-3xl font-heading font-bold text-white hover:text-brand transition-colors">Method</a>
-            <a href="#roi-calculator" onClick={(e) => handleNavClick(e, 'roi-calculator')} className="block text-3xl font-heading font-bold text-white hover:text-brand transition-colors">ROI Tool</a>
-            
             <div className="pt-8">
-              <a 
-                href="#contact" 
-                onClick={(e) => handleNavClick(e, 'contact')}
-                className="inline-block px-10 py-5 bg-brand text-white font-bold rounded-full shadow-lg shadow-brand/20 active:scale-95 transition-all uppercase tracking-widest text-xs"
-              >
-                Book Free Audit
-              </a>
+              <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="inline-block px-10 py-5 bg-brand text-white font-bold rounded-full shadow-lg shadow-brand/20 active:scale-95 transition-all uppercase tracking-widest text-xs">Book Free Audit</a>
             </div>
           </div>
         </div>
